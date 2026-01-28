@@ -10,13 +10,9 @@
 
 <br/><br/>
 
-### 🌈 О Проекте
 
 > **"Sabo Rubner ist unser Held!"**
 
-Этот проект написан с любовью и яркими красками на **Java**.
-
----
 
 <img src="https://media.giphy.com/media/LpDmM2wSt6Hm5fKJVa/giphy.gif" width="300" />
 

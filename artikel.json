@@ -1,0 +1,11 @@
+[ {
+  "id" : 1,
+  "bezeichnung" : "Kaffee",
+  "preis" : 3.5,
+  "lagerbestand" : 7
+}, {
+  "id" : 2,
+  "bezeichnung" : "Keks",
+  "preis" : 1.2,
+  "lagerbestand" : 15
+} ]

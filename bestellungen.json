@@ -1,0 +1,19 @@
+[ {
+  "id" : 1,
+  "kunden_id" : 1,
+  "artikel_id" : 1,
+  "anzahl" : 2,
+  "bestellt_am" : "2026-01-13 21:11:38"
+}, {
+  "id" : 2,
+  "kunden_id" : 1,
+  "artikel_id" : 2,
+  "anzahl" : 5,
+  "bestellt_am" : "2026-01-13 21:11:38"
+}, {
+  "id" : 3,
+  "kunden_id" : 2,
+  "artikel_id" : 1,
+  "anzahl" : 1,
+  "bestellt_am" : "2026-01-13 21:11:38"
+} ]

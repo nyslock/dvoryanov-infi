@@ -57,7 +57,8 @@ public class KundenVerwaltung {
     }
 
     public void listKunden() throws SQLException {
-        String sql = "SELECT id, name, email, erstellt_am FROM kunde ORDER BY id";
+        String sql = "SELECT kunde.id, kunde.name, kunde.email, kunde.erstellt_am, bestellung.anzahl, bestellung.artikel_id FROM kunde INNER "
+        		+ "JOIN bestellung ON kunde.id = bestellung.kunden_id ORDER BY id";
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -67,7 +68,9 @@ public class KundenVerwaltung {
                         rs.getInt("id") + " | " +
                         rs.getString("name") + " | " +
                         rs.getString("email") + " | seit: " +
-                        rs.getDate("erstellt_am")
+                        rs.getDate("erstellt_am") + " | anzahl: " +
+                        rs.getInt("anzahl") + " | artikel_id: " +
+                        rs.getString("artikel_id") 
                 );
             }
         }

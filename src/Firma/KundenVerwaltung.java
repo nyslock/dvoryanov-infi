@@ -75,7 +75,76 @@ public class KundenVerwaltung {
             }
         }
     }
+    
+    public void listInaktiveKunden() throws SQLException {
+        String sql = """
+            SELECT name, email FROM kunde
+            WHERE id NOT IN (SELECT DISTINCT kunden_id FROM bestellung)
+        """;
 
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            System.out.println("\n--- Inaktive Kunden (keine Bestellungen) ---");
+            while (rs.next()) {
+                System.out.println(rs.getString("name") + " | Email: " + rs.getString("email"));
+            }
+        }
+    }
+    
+    
+    public void listAlleNamen() throws SQLException {
+        String sql = """
+            SELECT name AS bezeichnung, 'Kunde' AS typ FROM kunde
+            UNION
+            SELECT bezeichnung, 'Artikel' FROM artikel
+            ORDER BY bezeichnung
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            System.out.println("\n--- Alle Einträge (Kunden & Artikel) ---");
+            while (rs.next()) {
+                System.out.println("[" + rs.getString("typ") + "] " + rs.getString("bezeichnung"));
+            }
+        }
+    }
+    
+    public void listKundenUmsatzRanking() throws SQLException {
+        // ВТБ (CTE) вычисляет сумму для каждого клиента, а основной запрос выводит результат
+        String sql = """
+            WITH KundenUmsatz AS (
+                SELECT 
+                    k.name, 
+                    SUM(b.anzahl * a.preis) AS gesamt_ausgegeben
+                FROM kunde k
+                JOIN bestellung b ON k.id = b.kunden_id
+                JOIN artikel a ON b.artikel_id = a.id
+                GROUP BY k.id, k.name
+            )
+            SELECT name, ROUND(gesamt_ausgegeben, 2) AS total 
+            FROM KundenUmsatz 
+            ORDER BY total DESC
+        """;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            System.out.println("\n--- Ranking: Kunden nach Umsatz ---");
+            boolean hasData = false;
+            
+            while (rs.next()) {
+                hasData = true;
+                System.out.printf("Kunde: %-20s | Gesamtumsatz: %8.2f €%n", 
+                    rs.getString("name"), 
+                    rs.getDouble("total"));
+            }
+            
+            if (!hasData) {
+                System.out.println("Bisher keine Umsätze vorhanden.");
+            }
+        }
+    }
+    
     private static String emptyToNull(String s) {
         return (s == null || s.trim().isEmpty()) ? null : s.trim();
     }

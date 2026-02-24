@@ -85,7 +85,11 @@ public class KundenArtikelBestellungTerminal {
                     21 Import CSV (kunden/artikel/bestellungen)
                     22 Export JSON (kunden/artikel/bestellungen)
                     23 Import JSON (kunden/artikel/bestellungen)
-
+                	
+                		30 Verkaufstatistik 
+                		31 InaktiveKunden
+                		32 AlleNamen
+                		
                     0  Ende
                     """);
 
@@ -199,7 +203,23 @@ public class KundenArtikelBestellungTerminal {
                         else if (what.equalsIgnoreCase("artikel")) io.importArtikelJSON(file);
                         else io.importBestellungenJSON(file);
                     }
-
+                    
+                    case 30 -> {
+                    		bestellung.listVerkaufsstatistik();
+                    }
+                    
+                    case 31 -> {
+                    		kunden.listInaktiveKunden();
+                    }
+                    
+                    case 32 -> {
+                    		kunden.listAlleNamen();
+                    }
+                    
+                    case 33 -> {
+                    		kunden.listKundenUmsatzRanking();
+                    }
+                    
                     case 0 -> lauf = false;
 
                     default -> System.out.println("Unbekannte Wahl!");

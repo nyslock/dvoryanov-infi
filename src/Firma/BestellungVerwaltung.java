@@ -64,7 +64,28 @@ public class BestellungVerwaltung {
             System.out.println("Bestellung updated: " + ps.executeUpdate() + " Zeile(n)");
         }
     }
+    
+    public void listVerkaufsstatistik() throws SQLException {
+        String sql = """
+            SELECT a.bezeichnung, SUM(b.anzahl) AS gesamt_menge, ROUND(SUM(b.anzahl * a.preis), 2) AS umsatz
+            FROM bestellung b
+            JOIN artikel a ON b.artikel_id = a.id
+            GROUP BY a.bezeichnung
+            ORDER BY umsatz DESC
+        """;
 
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            System.out.println("\n--- Verkaufsstatistik ---");
+            while (rs.next()) {
+                System.out.printf("Artikel: %-15s | Menge: %-3d | Umsatz: %.2f €%n",
+                        rs.getString("bezeichnung"),
+                        rs.getInt("gesamt_menge"),
+                        rs.getDouble("umsatz"));
+            }
+        }
+    }
+    
     public void deleteBestellung(int bestellId) throws SQLException {
         String sql = "DELETE FROM bestellung WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

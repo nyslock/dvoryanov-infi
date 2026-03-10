@@ -204,6 +204,34 @@ public class KundenArtikelBestellungTerminal {
                         else io.importBestellungenJSON(file);
                     }
                     
+                    case 24 -> {
+                        String createProc = """
+                            CREATE PROCEDURE AnzahlArtikel(OUT gesamt INT)
+                            BEGIN
+                                SELECT COUNT(*) INTO gesamt
+                                FROM artikel;
+                            END
+                            """;
+
+                        try (Statement st = conn.createStatement()) {
+                            try {
+                                st.execute("DROP PROCEDURE IF EXISTS AnzahlArtikel");
+                            } catch (SQLException e) {
+                                System.out.println("Procedure konnte nicht gelöscht werden.");
+                            }
+
+                            st.execute(createProc);
+                        }
+
+                        try (CallableStatement cst = conn.prepareCall("{CALL AnzahlArtikel(?)}")) {
+                            cst.registerOutParameter(1, Types.INTEGER);
+                            cst.execute();
+
+                            int anzahl = cst.getInt(1);
+                            System.out.println("Anzahl der Artikel: " + anzahl);
+                        }
+                    }
+                    
                     case 30 -> {
                     		bestellung.listVerkaufsstatistik();
                     }

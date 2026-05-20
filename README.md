@@ -1,6 +1,8 @@
 1. Ausgangspunkt: von null
 
+
 2. Ziel: strukturierte Verwaltung von Luftfahrtdaten und Flughafen Information (Flugzeuge, Flughäfen)
+
 
 3. Pflichten: 
 
@@ -9,8 +11,9 @@
 - inkl. Flughäfen (mit IATA-Codes, Stadt, Land, Zeitliche Verwaltung (Abflugszeiten/Ankunftszeiten), Auslastung)
 
 - Verwendung MySQL
-- ORM Datenbankverbundung über ORMLite
+- ORM Datenbankverbindung über ORMLite
 - Konsole als Menüführung
+
 
 4. Wünsche
 
@@ -19,17 +22,20 @@
 - Wartungsverlauf
 - Logging???
 
+
 5. Abgrenzungen
 
 - keine Live Daten
 - keine API oder ähnl. Netzwerkkommunikation
 - keine Benutzerauthentifizierung
 
+
 6. Einsatz
 
 - Zielgruppe: Sabo Rubner (ggf. andere Schüler)
 - Betriebsystem: Windows
 - Versionen: Java 17+, MySQL 8.0+,
+
 
 7. Datenbankstruktur
 
@@ -67,6 +73,8 @@ Beziehungen
   und hat einen Abflug- sowie einen Ankunfts-FLUGHAFEN
 - Ein FLUGZEUG kann beliebig viele FLÜGe machen (Hin- und Rückflüge)
 - Eine WARTUNG gehört einem FLUGZEUG und findet an einem FLUGHAFEN statt
+
+
 
 8. Konsolenmenü
 

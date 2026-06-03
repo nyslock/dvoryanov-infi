@@ -27,6 +27,13 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.17.2</version>
     </dependency>
+
+    <!-- ORM: ORMLite (JDBC variante, zieht ormlite-core automatisch mit) -->
+    <dependency>
+      <groupId>com.j256.ormlite</groupId>
+      <artifactId>ormlite-jdbc</artifactId>
+      <version>6.1</version>
+    </dependency>
   </dependencies>
 
   <build>

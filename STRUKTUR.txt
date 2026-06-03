@@ -1,0 +1,126 @@
+========================================
+ STRUKTUR - Wie ist das Programm aufgebaut?
+========================================
+
+Das Programm hat 3 SCHICHTEN (Ebenen). Jede Schicht hat eine klare Aufgabe.
+Stell dir das wie ein Restaurant vor:
+  - MODEL        = die Zutaten / das Essen          (die Daten)
+  - VERWALTUNG   = der Kellner                       (nimmt Wuensche entgegen)
+  - DATENBANK    = die Kueche/das Lager              (speichert alles)
+  - MAIN/EINGABE = die Speisekarte + der Gast        (Menue + Eingabe)
+
+
+ORDNERSTRUKTUR
+--------------
+  src/luftfahrt/
+    |
+    |-- model/                 << SCHICHT 1: die Daten (Entitaeten)
+    |     Flughafen.java
+    |     Airline.java
+    |     Flugzeug.java
+    |     Route.java
+    |     Flug.java
+    |     Wartung.java
+    |
+    |-- Datenbank.java         << Verbindung zur MySQL-Datenbank + DAOs
+    |
+    |-- FlughafenVerwaltung.java   << SCHICHT 2: Logik je Bereich
+    |-- AirlineVerwaltung.java
+    |-- FlugzeugVerwaltung.java
+    |-- RouteVerwaltung.java
+    |-- FlugVerwaltung.java
+    |-- WartungVerwaltung.java
+    |
+    |-- Eingabe.java           << Helfer: liest Text/Zahlen von der Tastatur
+    |
+    |-- Main.java              << SCHICHT 3: Start + Hauptmenue
+
+
+SCHICHT 1: MODEL (die Daten)
+----------------------------
+Jede Klasse im Ordner "model" ist EINE Tabelle in der Datenbank.
+Eine Klasse beschreibt, WIE ein Objekt aussieht (welche Felder es hat).
+
+Beispiel Flughafen.java:
+
+    @DatabaseTable(tableName = "flughafen")   // -> Tabelle heisst "flughafen"
+    public class Flughafen {
+        @DatabaseField(generatedId = true)    // -> id zaehlt automatisch hoch
+        private int id;
+        @DatabaseField
+        private String name;
+        ...
+    }
+
+Die @-Zeilen (Annotationen) sind die ORMLite-Anweisungen.
+Sie sagen: "Mach aus dieser Klasse eine Tabelle, aus jedem Feld eine Spalte."
+
+Fremdschluessel (Verbindung zu anderer Tabelle) sehen so aus:
+
+    @DatabaseField(foreign = true)
+    private Airline airline;     // ein Flugzeug zeigt direkt auf ein Airline-Objekt
+
+
+SCHICHT 2: VERWALTUNG (die Logik)
+---------------------------------
+Fuer jede Tabelle gibt es eine "Verwaltung"-Klasse.
+Sie enthaelt die 5 Aktionen: anzeigen, hinzufuegen, aendern, loeschen, suchen.
+
+Sie benutzt einen "DAO" (Data Access Object). Der DAO ist das Werkzeug von
+ORMLite, mit dem man die Datenbank anspricht - OHNE selbst SQL zu schreiben:
+
+    dao.create(obj)        // neuen Eintrag speichern    (INSERT)
+    dao.queryForAll()      // alle Eintraege holen        (SELECT *)
+    dao.queryForId(id)     // einen Eintrag per ID holen  (SELECT ... WHERE id=)
+    dao.update(obj)        // Eintrag aendern             (UPDATE)
+    dao.deleteById(id)     // Eintrag loeschen            (DELETE)
+    dao.queryForEq(...)    // suchen nach einem Wert      (SELECT ... WHERE ...)
+
+Jede Verwaltung hat auch ein eigenes kleines Untermenue (Methode menue()).
+
+
+DATENBANK.java (die Verbindung)
+-------------------------------
+Diese Klasse ist die "Zentrale". Sie macht 3 Dinge:
+  1. baut die Verbindung zur MySQL-Datenbank auf (ConnectionSource)
+  2. erstellt fuer jede Tabelle einen DAO
+  3. legt die Tabellen an (falls sie noch nicht existieren)
+
+Benutzer + Passwort + Datenbankname stehen HIER (an einer Stelle).
+
+
+SCHICHT 3: MAIN + EINGABE (der Start)
+-------------------------------------
+Main.java ist der Startpunkt (public static void main).
+Ablauf in Main:
+  1. Datenbank verbinden
+  2. alle Verwaltung-Objekte erzeugen (jede bekommt ihre DAOs)
+  3. Beispieldaten anlegen (nur beim ersten Start)
+  4. Hauptmenue anzeigen (Schleife, bis man 0 = Beenden waehlt)
+  5. am Ende: Datenbank schliessen
+
+Eingabe.java ist nur ein Helfer: liest sicher Zahlen, Text, Datum, ja/nein
+von der Tastatur (Scanner). So muss nicht jede Klasse das selbst tun.
+
+
+DER WEG EINER AKTION (Beispiel: "neuen Flughafen anlegen")
+----------------------------------------------------------
+  1. Gast waehlt im Main-Menue:  [3] Flughaefen verwalten
+  2. Main ruft  flughaefen.menue()  auf
+  3. Im Untermenue waehlt man:    [2] Hinzufuegen
+  4. FlughafenVerwaltung.hinzufuegen() fragt mit Eingabe nach Name, Stadt, ...
+  5. es wird ein  new Flughafen(...)  Objekt gebaut
+  6. dao.create(flughafen)  speichert es in MySQL
+  7. fertig - beim naechsten "Anzeigen" sieht man den neuen Eintrag
+
+Kurz:   Main  ->  Verwaltung  ->  DAO  ->  MySQL-Datenbank
+                       (benutzt Model-Objekte als "Behaelter" fuer Daten)
+
+
+WARUM DIESE AUFTEILUNG?
+-----------------------
+  - Jede Datei hat EINE klare Aufgabe -> leichter zu verstehen.
+  - Aenderung an einer Tabelle? -> nur 2 Dateien anfassen
+    (das Model + die passende Verwaltung).
+  - Genau dasselbe Muster wie im "Firma"-Projekt (ArtikelVerwaltung usw.),
+    nur dass innen ORMLite statt handgeschriebenem SQL steckt.

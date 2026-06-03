@@ -1,0 +1,71 @@
+========================================
+ LUFTFAHRT-VERWALTUNG  -  Was macht das Programm?
+========================================
+
+HAUPTZIEL
+---------
+Ein Konsolenprogramm zur strukturierten Verwaltung von Luftfahrtdaten:
+Flugzeuge, Airlines, Flughaefen, Routen, Fluege und Wartungsauftraege.
+
+Man kann ueber ein Menue in der Konsole Daten:
+  - anzeigen
+  - hinzufuegen
+  - aendern
+  - loeschen
+  - suchen
+Alle Daten werden dauerhaft in einer MySQL-Datenbank gespeichert.
+
+
+WAS WIRD VERWALTET? (6 Tabellen)
+--------------------------------
+  FLUGHAFEN   - Flughaefen mit IATA-Code, Stadt, Land, Terminals, Zeitzone
+  AIRLINE     - Fluggesellschaften, jede hat einen Basis-Flughafen
+  FLUGZEUG    - Flugzeuge, gehoeren einer Airline + haben einen Heimat-Flughafen
+  ROUTE       - Verbindung zwischen zwei Flughaefen, gehoert einer Airline
+  FLUG        - ein konkreter Flug (Flugzeug + Route + Abflug/Ankunft)
+  WARTUNG     - Wartungsauftraege zu einem Flugzeug an einem Flughafen
+
+
+WIE HAENGEN DIE DINGE ZUSAMMEN? (Beziehungen)
+---------------------------------------------
+  - Eine AIRLINE   hat einen Basis-FLUGHAFEN        (z.B. Wizz Air -> Belgrad)
+  - Ein  FLUGZEUG  gehoert einer AIRLINE
+                   und hat einen Heimat-FLUGHAFEN
+  - Eine ROUTE     verbindet zwei FLUGHAEFEN
+                   und gehoert einer AIRLINE
+  - Ein  FLUG      wird von einem FLUGZEUG durchgefuehrt,
+                   folgt einer ROUTE,
+                   hat einen Abflug- und einen Ankunfts-FLUGHAFEN
+  - Eine WARTUNG   gehoert einem FLUGZEUG
+                   und findet an einem FLUGHAFEN statt
+
+Diese Verbindungen heissen "Fremdschluessel" (foreign keys).
+Beispiel: Ein Flugzeug "weiss", zu welcher Airline es gehoert.
+
+
+WELCHE TECHNIK WIRD VERWENDET? (laut README)
+--------------------------------------------
+  - Sprache:     Java 17+
+  - Datenbank:   MySQL 8.0+
+  - ORM:         ORMLite  (verbindet Java-Klassen mit DB-Tabellen)
+  - Oberflaeche: Konsole (Text-Menue)
+
+ORM bedeutet: Wir schreiben fast kein SQL selbst. Wir arbeiten mit normalen
+Java-Objekten (z.B. ein Flugzeug-Objekt), und ORMLite uebersetzt das
+automatisch in die Datenbank (INSERT, SELECT, UPDATE, DELETE).
+
+
+ABGRENZUNG (was das Programm NICHT macht)
+-----------------------------------------
+  - keine Live-Daten
+  - keine Netzwerk-/API-Kommunikation
+  - keine Benutzeranmeldung (Login)
+
+
+SO STARTET MAN ES
+-----------------
+  1. MySQL-Server muss laufen.
+  2. In Datenbank.java Benutzer/Passwort pruefen (root + Passwort).
+  3. Die Klasse  luftfahrt.Main  starten (Run As -> Java Application).
+  4. Die Datenbank + Tabellen werden automatisch erstellt.
+     Beim ersten Start werden Beispieldaten angelegt.

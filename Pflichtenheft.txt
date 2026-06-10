@@ -3,7 +3,7 @@
  Projekt: Luftfahrt-Verwaltung
 ========================================================================
 
-Autor:   vlasvlas
+Autor:   Vlas Dvoryanov
 Datum:   2026-06-10
 Version: 1.0
 

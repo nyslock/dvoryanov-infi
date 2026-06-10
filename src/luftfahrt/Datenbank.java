@@ -20,16 +20,14 @@ import luftfahrt.model.Wartung;
  * Baut die ORMLite-Verbindung (ConnectionSource) auf, erstellt für jede Tabelle
  * einen DAO ("Data Access Object") und legt die Tabellen an.
  *
- * Voraussetzung: Ein laufender MySQL-Server. Durch "createDatabaseIfNotExist=true"
- * wird die Datenbank "luftfahrt" automatisch angelegt.
+ * Es wird eine dateibasierte SQLite-Datenbank verwendet: kein Server, keine
+ * Installation und kein Passwort nötig. Die Datei "luftfahrt.db" wird beim
+ * ersten Start automatisch im Projektordner angelegt.
  */
 public class Datenbank {
 
-    // === Hier ggf. Benutzer/Passwort anpassen ===
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/luftfahrt";
-    private static final String USER = "root";
-    private static final String PASS = "124595761234";
+    // Dateibasierte SQLite-Datenbank: die Datei wird automatisch erstellt.
+    private static final String URL = "jdbc:sqlite:luftfahrt.db";
 
     private ConnectionSource connectionSource;
 
@@ -43,8 +41,8 @@ public class Datenbank {
 
     // Verbindung aufbauen, DAOs erzeugen und Tabellen anlegen
     public void verbinden() throws SQLException {
-        connectionSource = new JdbcConnectionSource(URL, USER, PASS);
-        System.out.println("Mit MySQL verbunden: " + URL);
+        connectionSource = new JdbcConnectionSource(URL);
+        System.out.println("Mit SQLite verbunden: " + URL);
 
         flughafenDao = DaoManager.createDao(connectionSource, Flughafen.class);
         airlineDao = DaoManager.createDao(connectionSource, Airline.class);

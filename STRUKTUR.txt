@@ -22,7 +22,7 @@ ORDNERSTRUKTUR
     |     Flug.java
     |     Wartung.java
     |
-    |-- Datenbank.java         << Verbindung zur MySQL-Datenbank + DAOs
+    |-- Datenbank.java         << Verbindung zur SQLite-Datenbank + DAOs
     |
     |-- FlughafenVerwaltung.java   << SCHICHT 2: Logik je Bereich
     |-- AirlineVerwaltung.java
@@ -82,11 +82,12 @@ Jede Verwaltung hat auch ein eigenes kleines Untermenue (Methode menue()).
 DATENBANK.java (die Verbindung)
 -------------------------------
 Diese Klasse ist die "Zentrale". Sie macht 3 Dinge:
-  1. baut die Verbindung zur MySQL-Datenbank auf (ConnectionSource)
+  1. baut die Verbindung zur SQLite-Datenbank auf (ConnectionSource)
   2. erstellt fuer jede Tabelle einen DAO
   3. legt die Tabellen an (falls sie noch nicht existieren)
 
-Benutzer + Passwort + Datenbankname stehen HIER (an einer Stelle).
+Der Datenbank-Pfad (Datei luftfahrt.db) steht HIER (an einer Stelle).
+SQLite braucht keinen Server und kein Passwort.
 
 
 SCHICHT 3: MAIN + EINGABE (der Start)
@@ -110,10 +111,10 @@ DER WEG EINER AKTION (Beispiel: "neuen Flughafen anlegen")
   3. Im Untermenue waehlt man:    [2] Hinzufuegen
   4. FlughafenVerwaltung.hinzufuegen() fragt mit Eingabe nach Name, Stadt, ...
   5. es wird ein  new Flughafen(...)  Objekt gebaut
-  6. dao.create(flughafen)  speichert es in MySQL
+  6. dao.create(flughafen)  speichert es in SQLite
   7. fertig - beim naechsten "Anzeigen" sieht man den neuen Eintrag
 
-Kurz:   Main  ->  Verwaltung  ->  DAO  ->  MySQL-Datenbank
+Kurz:   Main  ->  Verwaltung  ->  DAO  ->  SQLite-Datenbank
                        (benutzt Model-Objekte als "Behaelter" fuer Daten)
 
 

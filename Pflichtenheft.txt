@@ -1,0 +1,131 @@
+========================================================================
+ PFLICHTENHEFT
+ Projekt: Luftfahrt-Verwaltung
+========================================================================
+
+Autor:   vlasvlas
+Datum:   2026-06-10
+Version: 1.0
+
+
+1. AUSGANGSPUNKT
+------------------------------------------------------------------------
+Das Projekt wird von null entwickelt. Es existiert keine bestehende
+Software, auf der aufgebaut wird.
+
+
+2. ZIEL
+------------------------------------------------------------------------
+Strukturierte Verwaltung von Luftfahrtdaten und Flughafen-Informationen
+(Flugzeuge, Flughäfen, Airlines, Routen, Flüge und Wartungen).
+
+
+3. PFLICHTEN (Muss-Anforderungen)
+------------------------------------------------------------------------
+- Verwaltung von Flugzeugen (Heimat-Flughafen, Flüge, Airline)
+- Zuordnung von Airlines zu Flugzeugen
+- Verwaltung von Flughäfen mit:
+    * IATA-Code
+    * Stadt und Land
+    * zeitlicher Verwaltung (Abflugs-/Ankunftszeiten der Flüge)
+    * Auslastung / Terminals
+- Verwendung einer SQLite-Datenbank (dateibasiert, kein Server nötig)
+- Datenbankanbindung als ORM über ORMLite
+- Bedienung über eine Konsolen-Menüführung
+
+
+4. WÜNSCHE (Kann-Anforderungen)
+------------------------------------------------------------------------
+- Grafische Benutzeroberfläche (GUI)
+- Suche nach Einträgen
+- Wartungsverlauf je Flugzeug
+- Logging
+
+
+5. ABGRENZUNGEN (Nicht-Ziele)
+------------------------------------------------------------------------
+- keine Live-Daten
+- keine API- oder sonstige Netzwerkkommunikation
+- keine Benutzerauthentifizierung (kein Login)
+
+
+6. EINSATZ
+------------------------------------------------------------------------
+- Zielgruppe:     Sabo Rubner (ggf. andere Schüler)
+- Betriebssystem: Windows
+- Versionen:      Java 17+ (entwickelt/getestet mit Java 21),
+                  SQLite (eingebettet über sqlite-jdbc, kein Server nötig)
+
+
+7. DATENBANKSTRUKTUR
+------------------------------------------------------------------------
+FLUGHAFEN
+  id, name, iata_code, stadt, land, terminals, zeitzone
+
+AIRLINE
+  id, basis_flughafen_id (FK -> FLUGHAFEN), name, icao_code, iata_code,
+  hauptsitz, gruendungsjahr
+
+FLUGZEUG
+  id, airline_id (FK -> AIRLINE), heimat_flughafen_id (FK -> FLUGHAFEN),
+  kennzeichen, modell, hersteller, baujahr, sitzanzahl,
+  flugstunden_gesamt
+
+ROUTE
+  id, airline_id (FK -> AIRLINE), abflug_flughafen_id (FK -> FLUGHAFEN),
+  ziel_flughafen_id (FK -> FLUGHAFEN), routennummer, distanz_km, aktiv
+
+FLUG
+  id, flugzeug_id (FK -> FLUGZEUG), route_id (FK -> ROUTE),
+  abflug_flughafen_id (FK -> FLUGHAFEN),
+  ankunft_flughafen_id (FK -> FLUGHAFEN),
+  flugnummer, geplanter_abflug, geplante_ankunft,
+  tatsaechlicher_abflug, tatsaechliche_ankunft, status
+
+WARTUNG
+  id, flugzeug_id (FK -> FLUGZEUG), flughafen_id (FK -> FLUGHAFEN),
+  datum, typ, beschreibung, techniker, status, kosten
+
+
+BEZIEHUNGEN
+- Eine AIRLINE hat einen Basis-FLUGHAFEN (z. B. Wizz Air -> Belgrad).
+- Ein FLUGZEUG gehört einer AIRLINE und hat einen Heimat-FLUGHAFEN.
+- Eine ROUTE verbindet zwei FLUGHÄFEN und gehört einer AIRLINE.
+- Ein FLUG wird von einem FLUGZEUG durchgeführt, folgt einer ROUTE und
+  hat einen Abflug- sowie einen Ankunfts-FLUGHAFEN.
+- Ein FLUGZEUG kann beliebig viele FLÜGE durchführen (Hin-/Rückflüge).
+- Eine WARTUNG gehört einem FLUGZEUG und findet an einem FLUGHAFEN statt.
+
+
+8. KONSOLENMENÜ (Hauptmenü)
+------------------------------------------------------------------------
+ [1] Flugzeuge verwalten
+ [2] Airlines verwalten
+ [3] Flughäfen verwalten
+ [4] Routen verwalten
+ [5] Flüge verwalten
+ [6] Wartungsaufträge verwalten
+ [0] Beenden
+========================================
+Auswahl:
+
+Jeder Menüpunkt bietet die Aktionen: Anzeigen, Hinzufügen, Ändern,
+Löschen und Suchen.
+
+
+9. ERFÜLLUNGSGRAD (Stand 2026-06-10)
+------------------------------------------------------------------------
+PFLICHTEN
+  [erfüllt] Verwaltung von Flugzeugen (Airline + Heimat-Flughafen)
+  [erfüllt] Zuordnung von Airlines zu Flugzeugen
+  [erfüllt] Verwaltung von Flughäfen (IATA, Stadt, Land, Terminals,
+            Zeitzone) inkl. zeitlicher Verwaltung über die Flüge
+  [erfüllt] SQLite-Datenbank (dateibasiert)
+  [erfüllt] ORM über ORMLite
+  [erfüllt] Konsolen-Menüführung
+
+WÜNSCHE
+  [erfüllt] Suche (in jeder Verwaltung vorhanden)
+  [erfüllt] Wartungsverlauf je Flugzeug
+  [offen]   Grafische Benutzeroberfläche (GUI)
+  [offen]   Logging

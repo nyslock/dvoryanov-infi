@@ -13,7 +13,8 @@ Man kann ueber ein Menue in der Konsole Daten:
   - aendern
   - loeschen
   - suchen
-Alle Daten werden dauerhaft in einer MySQL-Datenbank gespeichert.
+Alle Daten werden dauerhaft in einer SQLite-Datenbank (Datei luftfahrt.db)
+gespeichert.
 
 
 WAS WIRD VERWALTET? (6 Tabellen)
@@ -45,8 +46,8 @@ Beispiel: Ein Flugzeug "weiss", zu welcher Airline es gehoert.
 
 WELCHE TECHNIK WIRD VERWENDET? (laut README)
 --------------------------------------------
-  - Sprache:     Java 17+
-  - Datenbank:   MySQL 8.0+
+  - Sprache:     Java 17+ (getestet mit Java 21)
+  - Datenbank:   SQLite (dateibasiert, kein Server noetig)
   - ORM:         ORMLite  (verbindet Java-Klassen mit DB-Tabellen)
   - Oberflaeche: Konsole (Text-Menue)
 
@@ -64,8 +65,7 @@ ABGRENZUNG (was das Programm NICHT macht)
 
 SO STARTET MAN ES
 -----------------
-  1. MySQL-Server muss laufen.
-  2. In Datenbank.java Benutzer/Passwort pruefen (root + Passwort).
-  3. Die Klasse  luftfahrt.Main  starten (Run As -> Java Application).
-  4. Die Datenbank + Tabellen werden automatisch erstellt.
-     Beim ersten Start werden Beispieldaten angelegt.
+  1. Die Klasse  luftfahrt.Main  starten (Run As -> Java Application).
+  2. Die Datenbank-Datei (luftfahrt.db) + alle Tabellen werden automatisch
+     erstellt. Es ist KEINE Datenbank-Einrichtung und KEIN Passwort noetig.
+  3. Beim ersten Start werden automatisch Beispieldaten angelegt.

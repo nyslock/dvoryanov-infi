@@ -1,1 +1,5 @@
-bin/ 
+bin/
+target/
+
+# automatisch erzeugte SQLite-Datenbank
+luftfahrt.db
